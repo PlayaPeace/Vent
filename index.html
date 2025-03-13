@@ -9,13 +9,19 @@
 MathJax = {
   tex: {
     inlineMath: [['$', '$'], ['\\(', '\\)']],
-    displayMath: [['$$', '$$'], ['\\[', '\\]']]
+    displayMath: [['$$', '$$'], ['\\[', '\\]']],
+    processEscapes: true
+  },
+  options: {
+    skipHtmlTags: ['script', 'noscript', 'style', 'textarea', 'pre']
   },
   startup: {
-    typeset: false // Отключаем авто-рендеринг
-  },
-  svg: {
-    fontCache: 'global'
+    ready: () => {
+      MathJax.startup.defaultReady();
+      MathJax.startup.promise.then(() => {
+        console.log('MathJax initialized');
+      });
+    }
   }
 };
 </script>
