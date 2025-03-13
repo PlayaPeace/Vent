@@ -61,6 +61,9 @@ let inputs = document.querySelectorAll('input');
 
 for (let elem = 0; elem < inputs.length; elem++){
    inputs[elem].addEventListener('keydown', function (event) {
+	   setTimeout(() => {
+  calculate(formulaResult0, hiddenFormulaCont, formulaCont, canvasCont);
+}, 500); // Задержка 500 мс для инициализации MathJax
       if (event.key === 'Enter') {
          const target = event.target;
          let maths = document.querySelectorAll('math');
@@ -419,8 +422,13 @@ function calculate(formulaResult, hiddenFormulaCont, formulaCont, canvasCont) {
   var hiddenFormulaDiv = document.getElementById(hiddenFormulaCont);
   
   hiddenFormulaDiv.innerHTML = `$$${formulaResult}$$`;
-  MathJax.typesetPromise([hiddenFormulaDiv]).then(() => {
-    var svg = hiddenFormulaDiv.querySelector('svg');
+ MathJax.typesetPromise([hiddenFormulaDiv])
+    .then(() => {
+      return MathJax.typesetPromise([hiddenFormulaDiv]); // Двойная проверка
+    })
+    .then(() => {
+      const svg = hiddenFormulaDiv.querySelector('svg');
+      if (!svg) throw new Error('SVG element not found');
     var canvas = document.getElementById(canvasCont);
     if (svg) {
       var xml = new XMLSerializer().serializeToString(svg);
